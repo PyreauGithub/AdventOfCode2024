@@ -1,1 +1,36 @@
+#include <string>
+#include <vector>
+#include <iostream>
+using namespace std;
 
+int main()
+{
+    
+    int dist = 0;
+    vector<int> left_array;
+    vector<int> right_array;
+
+    for (int i = 0; i < puzzle.length() - 1; i += 14) 
+    {
+        
+        left_array.push_back(stoi(puzzle.substr(1+i,6+i)));
+        right_array.push_back(stoi(puzzle.substr(9+i, 14+i)));
+    }
+
+    int taille = left_array.size();
+    for (int j = 0; j < 1000; j++) { cout << left_array[j] << endl; }
+
+    for (int j = 0; j < 1000; j++)
+    {
+        auto left_min = min_element(left_array.begin(), left_array.end());
+        auto right_min = min_element(right_array.begin(), right_array.end());
+        
+        dist += abs(*left_min - *right_min);
+        left_array.erase(left_min);
+        right_array.erase(right_min);
+    }
+
+    cout << "\n" << dist;
+
+    return 0;
+}
