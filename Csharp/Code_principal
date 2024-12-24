@@ -1,1 +1,59 @@
+using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
+namespace AOC2_C_
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string[] lignes = puzzle.Split("\n");
+            int total_safe = 0;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                string[] str_list = lignes[i].Split(" ");
+                int[] report = Array.ConvertAll(str_list, int.Parse);
+                int safe = 0;
+
+                for (int j = 0; j < report.Length-1; j++)
+                {
+                    int first = report[j];
+                    int second = report[j + 1];
+                    int correspondance = report.Length - 1;
+
+                    if ((first > second) && (first-second == 1 || first-second == 2 || first-second == 3))
+                    {
+                        safe++;
+                    }
+                    if (safe == correspondance) { total_safe++; }
+                }
+
+                if (safe == 0)
+                {
+                    for (int j = 0; j < report.Length - 1; j++)
+                    {
+                        int first = report[j];
+                        int second = report[j + 1];
+                        int correspondance = report.Length - 1;
+
+                        if ((first < second) && (second - first == 1 || second - first == 2 || second - first == 3))
+                        {
+                            safe++;
+                        }
+                        if (safe == correspondance) { total_safe++; }
+                    }
+                }
+
+                //Console.WriteLine(safe);
+            }
+
+            Console.WriteLine(total_safe);
+            
+
+
+
+        }
+    }
+}
