@@ -1,1 +1,117 @@
+from variables import puzzle
+import copy
+m = puzzle.split("\n")
+carte = []
+ligne = []
+for i in range(len(m)):
+    for j in range(len(m)):
+        ligne.append(m[i][j])
+    carte.append(ligne)
+    ligne = []
 
+carteX = copy.deepcopy(carte)
+
+#-----------------------------------------------------
+
+def guard_find():
+    for i in range(len(carte)):
+        for j in range(len(carte[i])):
+            if carte[i][j] in ["v", "^", "<", ">"]:
+                return i, j
+
+guard_test = carte[guard_find()[0]][guard_find()[1]]
+print(guard_test)
+
+def guard_turn(y,x):
+    guard = carte[y][x]
+    if guard == "^":
+        carte[y][x] = ">"
+    elif guard == ">":
+        carte[y][x] = "v"
+    elif guard == "v":
+        carte[y][x] = "<"
+    else:
+        carte[y][x] = "^"
+
+def guard_direction(y,x):
+    return carte[y][x]
+
+def placer_x(y,x):
+    carteX[y][x] = "X"
+
+def est_dans_carte(y, x):
+    return 0 <= y < len(carte) and 0 <= x < len(carte[0])
+
+temp = 0
+
+
+while True:
+    
+    y, x = guard_find()
+    
+    if guard_direction(y,x) == "^":
+        if est_dans_carte(y-1,x) and "#" == carte[y-1][x]:
+            guard_turn(y,x)
+        elif not est_dans_carte(y-1,x):
+            placer_x(y,x)
+            break
+        else:
+            placer_x(y,x)
+            carte[y-1][x] = "^"
+            carte[y][x] = "."
+
+
+    if guard_direction(y,x) == ">":
+        if  est_dans_carte(y,x+1) and "#" == carte[y][x+1]:
+            guard_turn(y,x)
+        elif not est_dans_carte(y,x+1):
+            placer_x(y,x)
+            break
+        else:
+            placer_x(y,x)
+            carte[y][x+1] = ">"
+            carte[y][x] = "."
+
+
+    if guard_direction(y,x) == "v":
+        if  est_dans_carte(y+1,x) and "#" == carte[y+1][x]:
+            guard_turn(y,x)
+        elif not est_dans_carte(y+1,x):
+            placer_x(y,x)
+            break
+        else:
+            placer_x(y,x)
+            carte[y+1][x] = "v"
+            carte[y][x] = "."
+            
+
+    if guard_direction(y,x) == "<":
+        if  est_dans_carte(y,x-1) and "#" == carte[y][x-1]:
+            guard_turn(y,x)
+        elif not est_dans_carte(y,x-1):
+            placer_x(y,x)
+            break
+        else:
+            placer_x(y,x)
+            carte[y][x-1] = "<"
+            carte[y][x] = "."
+    
+
+
+#------------------------------------------------------------------
+def sauvegarder_carte(carte, nom_fichier="carte_finale.txt"):
+    with open(nom_fichier, "w") as fichier:
+        for ligne in carte:
+            fichier.write("".join(ligne) + "\n")
+    print(f"Carte sauvegardée dans {nom_fichier}.")
+
+sauvegarder_carte(carteX)
+print(carteX)
+
+#------------------------------------------------------------------
+compteur = 0
+for i in range(len(carteX)):
+    for j in range(len(carteX[i])):
+        if "X" == carteX[i][j]:
+            compteur += 1
+print("Nombre de X : ",compteur)
